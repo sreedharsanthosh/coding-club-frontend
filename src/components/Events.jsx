@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import Header from "./Header";
 import { Dialog } from "primereact/dialog";
+import { API_ENDPOINTS } from "../apis/api";
 
 const Events = () => {
   const [events, setEvents] = useState([]);
@@ -26,7 +27,7 @@ const Events = () => {
     const fetchEvents = async () => {
       try {
         const response = await axios.get(
-          `${import.meta.env.VITE_API_URL}/events`
+          `${API_ENDPOINTS.EVENT}`
         );
         const currentDate = new Date();
         const upcomingEvents = response.data.filter(
@@ -43,7 +44,7 @@ const Events = () => {
     const fetchPastEvents = async () => {
       try {
         const response = await axios.get(
-          `${import.meta.env.VITE_API_URL}/events`
+          `${API_ENDPOINTS.EVENT}`
         );
         const currentDate = new Date();
         const pastEvents = response.data.filter(

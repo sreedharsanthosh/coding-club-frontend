@@ -52,10 +52,10 @@ const Header = () => {
         className="bg-gradient-to-r from-blue-600 to-red-500 text-white font-semibold py-2 px-4 rounded-lg hover:from-blue-700 hover:to-red-600 transition-colors duration-200 -mt-1"
         onClick={(e) => {
           e.preventDefault();
-          navigate(isAdminLoggedIn ? "/admin-dashboard" : "/admin-login");
+          navigate(isAdminLoggedIn ? "/admin-dashboard" : "/Login");
         }}
       >
-        {isAdminLoggedIn ? "Admin-in" : "Admin-Login"}
+        Login
       </button>
 
       </div>
