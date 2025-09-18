@@ -66,6 +66,7 @@ export default function ProfilePage() {
                 {/* placeholder avatar */}
                 <Avvvatars
                   value={user ? user.name : "Loading"}
+
                   style="shape"
                   size={176}
                   textSize={64}
