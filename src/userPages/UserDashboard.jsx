@@ -3,17 +3,20 @@ import Logo from "../assets/coding club dp copy 2.svg";
 import Avvvatars from "avvvatars-react";
 import { FaRegHand } from "react-icons/fa6";
 import { ImClearFormatting } from "react-icons/im";
+import { useNavigate } from "react-router-dom";
 
 export default function ProfilePage() {
   const [user, setUser] = useState();
 
   useEffect(() => {
-    async function fetchUser() {
-      const user = await localStorage.getItem("user");
+    function fetchUser() {
+      const user = localStorage.getItem("user");
       setUser(JSON.parse(user));
     }
     fetchUser();
-  });
+  }, []);
+
+  const navigate = useNavigate();
 
   const [editing, setEditing] = useState(false);
 
@@ -24,7 +27,13 @@ export default function ProfilePage() {
         <div className="text-sm">
           <img src={Logo} alt="Logo" className="w-24 h-24" />
         </div>
-        <button className="rounded-full bg-neutral-900 px-4 py-2 text-sm font-semibold shadow ring-1 ring-white/10 hover:bg-neutral-800">
+        <button
+          className="rounded-full bg-neutral-900 px-4 py-2 text-sm font-semibold shadow ring-1 ring-white/10 hover:bg-neutral-800"
+          onClick={() => {
+            localStorage.removeItem("user");
+            navigate("/");
+          }}
+        >
           Logout
         </button>
       </header>
@@ -56,7 +65,7 @@ export default function ProfilePage() {
               <div className="h-44 w-44 rounded-full bg-neutral-800 ring-1 ring-white/10 overflow-hidden">
                 {/* placeholder avatar */}
                 <Avvvatars
-                  value="John Doe"
+                  value={user ? user.name : "Loading"}
                   style="shape"
                   size={176}
                   textSize={64}
