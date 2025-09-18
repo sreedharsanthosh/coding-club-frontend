@@ -24,6 +24,9 @@ import Loader from "./components/Loader/loader";
 import ProtectedAdminRoute from "./protectedRoutes/ProtectedAdminRoute";
 import Login from "./Auth/Login";
 import Register from "./Auth/Register";
+import ProtectedUserRoute from "./protectedRoutes/protectedUserRoute";
+import ProfilePage from "./userPages/UserDashboard";
+
 function App() {
   const [isLoading, setIsLoading] = useState(true);
 
@@ -44,7 +47,7 @@ function App() {
   return (
     <div className="min-h-screen flex flex-col bg-black text-white font-source w-full h-full max-w-screen">
       {isLoading ? (
-        <Loader/>
+        <Loader />
       ) : (
         <>
           <Toast ref={toast} position="bottom-center" />
@@ -56,14 +59,18 @@ function App() {
               <Route path="/contacts" element={<Contacts />} />
               <Route element={<RequireAuth />}></Route>
               <Route path="/admin-login" element={<AdminLogin />} />
-              <Route path="/Login" element={<Login/>}/>
-              <Route path="/Register" element={<Register/>}/>
+              <Route path="/Login" element={<Login />} />
+              <Route path="/Register" element={<Register />} />
               {/* Protected Admin Routes */}
               <Route element={<ProtectedAdminRoute />}>
                 <Route path="/admin-dashboard" element={<AdminDashboard />} />
                 <Route path="/admin-events" element={<AdminEvents />} />
               </Route>
-              
+
+              {/* Protected User Routes */}
+              <Route element={<ProtectedUserRoute />}>
+                <Route path="/user_dashboard" element={<ProfilePage />} />
+              </Route>
             </Routes>
             <Footer />
           </BrowserRouter>

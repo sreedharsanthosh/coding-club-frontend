@@ -154,33 +154,32 @@ function LoginForm() {
       });
 
       const data = await res.json();
-      
+
       if (res.ok) {
         status.textContent = data.message || "Login successful";
         status.className = "status ok";
-        
+
         if (data.token) {
-          localStorage.setItem('authToken', data.token);
+          localStorage.setItem("authToken", data.token);
         }
         if (data.user) {
-          localStorage.setItem('user', JSON.stringify(data.user));
+          localStorage.setItem("user", JSON.stringify(data.user));
         }
-        
+
         setTimeout(() => {
           // go to profile
           // for now it goes to website
-          navigate('/')
-          console.log('Redirecting to dashboard...');
+          navigate("/user_dashboard");
+          console.log("Redirecting to dashboard...");
         }, 1000);
-        
-        console.log('Login successful:', data);
-        
+
+        console.log("Login successful:", data);
       } else {
         status.textContent = data.message || `Error ${res.status}`;
         status.className = "status err";
       }
     } catch (err) {
-      console.error('Login error:', err);
+      console.error("Login error:", err);
       status.textContent = "Network error. Please check your connection.";
       status.className = "status err";
     }
