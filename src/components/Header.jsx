@@ -5,12 +5,13 @@ import { Link, useNavigate } from "react-router-dom";
 const Header = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [isAdminLoggedIn, setIsAdminLoggedIn] = useState(false);
+  const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
     setIsAdminLoggedIn(!!localStorage.getItem("CCAdminToken"));
+    setIsUserLoggedIn(!!localStorage.getItem("user"));
   }, []);
-
 
   const handleOnClick = (to) => {
     setIsVisible(!isVisible);
@@ -32,7 +33,7 @@ const Header = () => {
           Home
           <span className="absolute bottom-2 left-0 w-full h-[2px] bg-white transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 ease-in-out"></span>
         </Link>
-      
+
         <Link to="/events" className="relative  group cursor-pointer">
           Events
           <span className="absolute bottom-2 left-0 w-full h-[2px] bg-white transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 ease-in-out"></span>
@@ -43,21 +44,17 @@ const Header = () => {
           <span className="absolute bottom-2 left-0 w-full h-[2px] bg-white transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 ease-in-out"></span>
         </Link>
 
-        <Link to="/contacts" className="relative  group cursor-pointer">
+        <Link to="/contacts" className="relative group cursor-pointer">
           Contact
           <span className="absolute bottom-2 left-0 w-full h-[2px] bg-white transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 ease-in-out"></span>
         </Link>
 
-        <button
-        className="bg-gradient-to-r from-blue-600 to-red-500 text-white font-semibold py-2 px-4 rounded-lg hover:from-blue-700 hover:to-red-600 transition-colors duration-200 -mt-1"
-        onClick={(e) => {
-          e.preventDefault();
-          navigate(isAdminLoggedIn ? "/admin-dashboard" : "/Login");
-        }}
-      >
-        Login
-      </button>
-
+        <Link
+          to={isUserLoggedIn ? "/user_dashboard" : "/Login"}
+          className="bg-gradient-to-r from-blue-600 to-red-500 text-white font-semibold py-2 px-4 rounded-lg hover:from-blue-700 hover:to-red-600 transition-colors duration-200 -mt-1"
+        >
+          {isUserLoggedIn ? "Dashboard" : "Login"}
+        </Link>
       </div>
 
       <div
@@ -82,7 +79,7 @@ const Header = () => {
             Home
             <span className="absolute bottom-2 left-0 w-full h-[2px] bg-white transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 ease-in-out"></span>
           </div>
-        
+
           <button
             className="relative  group cursor-pointer"
             onClick={() => handleOnClick("/events")}
