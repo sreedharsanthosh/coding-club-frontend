@@ -5,6 +5,9 @@ import { useNavigate } from "react-router-dom";
 import { SignOutButton } from "@clerk/clerk-react";
 import { useAuth } from "@clerk/clerk-react";
 import { API_ENDPOINTS } from "../apis/api";
+import { FaRegHand } from "react-icons/fa6";
+import { ImClearFormatting } from "react-icons/im";
+import { useNavigate } from "react-router-dom";
 
 export default function ProfilePage() {
   const [token, setToken] = useState();
@@ -54,7 +57,15 @@ export default function ProfilePage() {
         <div className="text-sm">
           <img src={Logo} alt="Logo" className="w-24 h-24" />
         </div>
-        <SignOutButton />
+        <button
+          className="rounded-full bg-neutral-900 px-4 py-2 text-sm font-semibold shadow ring-1 ring-white/10 hover:bg-neutral-800"
+          onClick={() => {
+            localStorage.removeItem("user");
+            navigate("/");
+          }}
+        >
+          Logout
+        </button>
       </header>
 
       {/* Content */}
