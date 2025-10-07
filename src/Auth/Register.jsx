@@ -1,5 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { API_ENDPOINTS } from "../apis/api";
+import { useAuth } from "@clerk/clerk-react";
+import { useEffect, useState } from "react";
 
 export default function Register() {
   return (
@@ -159,7 +161,20 @@ export default function Register() {
 }
 
 function FormBlock() {
+  const [token, setToken] = useState();
+
   const navigate = useNavigate();
+
+  const { getToken } = useAuth();
+
+  useEffect(() => {
+    async function getJWT() {
+      const token = await getToken();
+      setToken(token);
+      console.log(token);
+    }
+    getJWT();
+  }, []);
 
   async function onSubmit(e) {
     e.preventDefault();
@@ -167,23 +182,14 @@ function FormBlock() {
     const name = String(data.get("name") || "").trim();
     const year = String(data.get("year") || "").trim();
     const branch = String(data.get("branch") || "").trim();
-    const email = String(data.get("email") || "").trim();
-    const password = String(data.get("password") || "").trim();
-    const confirmPassword = String(data.get("confirmPassword") || "").trim();
 
     const status = e.currentTarget.querySelector(".status");
-    const fields = ["name", "year", "branch", "email", "password"];
-    const values = { name, year, branch, email, password };
+    const fields = ["name", "year", "branch"];
+    const values = { name, year, branch };
     const missing = fields.filter((field) => !values[field]);
 
     if (missing.length) {
       status.textContent = "Please fill all required fields.";
-      status.className = "status err";
-      return;
-    }
-
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      status.textContent = "Enter a valid email address.";
       status.className = "status err";
       return;
     }
@@ -194,32 +200,20 @@ function FormBlock() {
       return;
     }
 
-    if (password.length < 6) {
-      status.textContent = "Password must be at least 6 characters long.";
-      status.className = "status err";
-      return;
-    }
-
-    if (password !== confirmPassword) {
-      status.textContent = "Passwords do not match.";
-      status.className = "status err";
-      return;
-    }
-
     status.textContent = "Creating account...";
     status.className = "status";
 
     try {
       const res = await fetch(`${API_ENDPOINTS.REGISTER}`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
         credentials: "include",
         body: JSON.stringify({
-          name,
           branch,
-          emailID: email,
           year: parseInt(year),
-          password,
         }),
       });
 
@@ -283,45 +277,6 @@ function FormBlock() {
           name="branch"
           className="input"
           placeholder="CSE / ECE / ..."
-        />
-      </div>
-
-      <div className="field">
-        <label className="label" htmlFor="email">
-          Email ID <span className="dash" />
-        </label>
-        <input
-          id="email"
-          name="email"
-          className="input"
-          type="email"
-          placeholder="abc@tkmce.ac.in"
-        />
-      </div>
-
-      <div className="field">
-        <label className="label" htmlFor="password">
-          Password <span className="dash" />
-        </label>
-        <input
-          id="password"
-          name="password"
-          className="input"
-          type="password"
-          placeholder="Enter password"
-        />
-      </div>
-
-      <div className="field">
-        <label className="label" htmlFor="confirmPassword">
-          Confirm <span className="dash" />
-        </label>
-        <input
-          id="confirmPassword"
-          name="confirmPassword"
-          className="input"
-          type="password"
-          placeholder="Confirm password"
         />
       </div>
 

@@ -1,3 +1,4 @@
+import { SignedIn, SignedOut } from "@clerk/clerk-react";
 import { useState, useEffect } from "react";
 import { IoClose, IoMenu } from "react-icons/io5";
 import { Link, useNavigate } from "react-router-dom";
@@ -49,12 +50,22 @@ const Header = () => {
           <span className="absolute bottom-2 left-0 w-full h-[2px] bg-white transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 ease-in-out"></span>
         </Link>
 
-        <Link
-          to={isUserLoggedIn ? "/user_dashboard" : "/Login"}
-          className="bg-gradient-to-r from-blue-600 to-red-500 text-white font-semibold py-2 px-4 rounded-lg hover:from-blue-700 hover:to-red-600 transition-colors duration-200 -mt-1"
-        >
-          {isUserLoggedIn ? "Dashboard" : "Login"}
-        </Link>
+        <SignedIn>
+          <Link
+            to="/user_dashboard"
+            className="bg-gradient-to-r from-blue-600 to-red-500 text-white font-semibold py-2 px-4 rounded-lg hover:from-blue-700 hover:to-red-600 transition-colors duration-200 -mt-1"
+          >
+            Dashboard
+          </Link>
+        </SignedIn>
+        <SignedOut>
+          <Link
+            to="/login"
+            className="bg-gradient-to-r from-blue-600 to-red-500 text-white font-semibold py-2 px-4 rounded-lg hover:from-blue-700 hover:to-red-600 transition-colors duration-200 -mt-1"
+          >
+            Login
+          </Link>
+        </SignedOut>
       </div>
 
       <div

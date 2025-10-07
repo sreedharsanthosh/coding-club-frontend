@@ -1,11 +1,38 @@
 import { useEffect, useState } from "react";
 import Logo from "../assets/coding club dp copy 2.svg";
 import Avvvatars from "avvvatars-react";
-import { FaRegHand } from "react-icons/fa6";
-import { ImClearFormatting } from "react-icons/im";
 import { useNavigate } from "react-router-dom";
+import { SignOutButton } from "@clerk/clerk-react";
+import { useAuth } from "@clerk/clerk-react";
+import { API_ENDPOINTS } from "../apis/api";
 
 export default function ProfilePage() {
+  const [token, setToken] = useState();
+
+  const { getToken } = useAuth();
+
+  useEffect(() => {
+    async function getUser() {
+      try {
+        const token = await getToken();
+        setToken(token);
+        const res = await fetch(`${API_ENDPOINTS.PROFILE}`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          credentials: "include",
+        });
+        const responseData = await res.json();
+        setUser(responseData);
+      } catch (err) {
+        console.log("Error while fetching user", err);
+      }
+    }
+    getUser();
+  }, []);
+
   const [user, setUser] = useState();
 
   useEffect(() => {
@@ -27,15 +54,7 @@ export default function ProfilePage() {
         <div className="text-sm">
           <img src={Logo} alt="Logo" className="w-24 h-24" />
         </div>
-        <button
-          className="rounded-full bg-neutral-900 px-4 py-2 text-sm font-semibold shadow ring-1 ring-white/10 hover:bg-neutral-800"
-          onClick={() => {
-            localStorage.removeItem("user");
-            navigate("/");
-          }}
-        >
-          Logout
-        </button>
+        <SignOutButton />
       </header>
 
       {/* Content */}
@@ -123,7 +142,7 @@ export default function ProfilePage() {
               <div>
                 <label className="mb-2 block text-xl font-bold">Email</label>
                 <h1 className="w-full rounded-xl bg-[#252b31] px-5 py-4 text-lg text-white outline-none ring-1 ring-white/10 focus:ring-2 focus:ring-white/30 disabled:opacity-60">
-                  {user ? user.email : "Loading"}
+                  {user ? user.emailID : "Loading"}
                 </h1>
               </div>
             </div>

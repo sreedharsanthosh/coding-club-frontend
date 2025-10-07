@@ -26,9 +26,18 @@ import Login from "./Auth/Login";
 import Register from "./Auth/Register";
 import ProtectedUserRoute from "./protectedRoutes/protectedUserRoute";
 import ProfilePage from "./userPages/UserDashboard";
+import { ClerkProvider, SignedIn, SignedOut } from "@clerk/clerk-react";
+import GoogleRegister from "./Auth/GoogleRegister";
+import GoogleLogin from "./Auth/GoogleLogin";
+
+const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
 
 function App() {
   const [isLoading, setIsLoading] = useState(true);
+
+  if (!PUBLISHABLE_KEY) {
+    throw new Error("Missing Publishable Key");
+  }
 
   useEffect(() => {
     setTimeout(() => {
@@ -51,29 +60,31 @@ function App() {
       ) : (
         <>
           <Toast ref={toast} position="bottom-center" />
-          <BrowserRouter>
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/events" element={<Events />} />
-              <Route path="/execom" element={<Execom />} />
-              <Route path="/contacts" element={<Contacts />} />
-              <Route element={<RequireAuth />}></Route>
-              <Route path="/admin-login" element={<AdminLogin />} />
-              <Route path="/Login" element={<Login />} />
-              <Route path="/Register" element={<Register />} />
-              {/* Protected Admin Routes */}
-              <Route element={<ProtectedAdminRoute />}>
-                <Route path="/admin-dashboard" element={<AdminDashboard />} />
-                <Route path="/admin-events" element={<AdminEvents />} />
-              </Route>
+          <ClerkProvider publishableKey={PUBLISHABLE_KEY}>
+            <BrowserRouter>
+              <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/events" element={<Events />} />
+                <Route path="/execom" element={<Execom />} />
+                <Route path="/contacts" element={<Contacts />} />
+                <Route element={<RequireAuth />}></Route>
+                <Route path="/admin-login" element={<AdminLogin />} />
+                <Route path="/Login" element={<GoogleLogin />} />
+                <Route path="/register" element={<GoogleRegister />} />
+                <Route path="/register" element={<GoogleRegister />} />
+                <Route path="/addDetails" element={<Register />} />
+                {/* Protected Admin Routes */}
+                <Route element={<ProtectedAdminRoute />}>
+                  <Route path="/admin-dashboard" element={<AdminDashboard />} />
+                  <Route path="/admin-events" element={<AdminEvents />} />
+                </Route>
 
-              {/* Protected User Routes */}
-              <Route element={<ProtectedUserRoute />}>
+                {/* Protected User Routes */}
                 <Route path="/user_dashboard" element={<ProfilePage />} />
-              </Route>
-            </Routes>
-            <Footer />
-          </BrowserRouter>
+              </Routes>
+              <Footer />
+            </BrowserRouter>
+          </ClerkProvider>
         </>
       )}
     </div>
